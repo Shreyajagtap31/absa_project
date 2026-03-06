@@ -20,3 +20,9 @@ output/summary_stats.csv
 # Python env
 .env
 *.egg-info/
+
+# Model checkpoints - too large for GitHub (700MB+)
+checkpoints/
+*.state_dict
+*.pt
+*.bin
