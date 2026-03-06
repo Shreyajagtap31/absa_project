@@ -1,0 +1,22 @@
+# Large data files - too big for git
+data/raw/
+data/processed/
+
+# Model cache
+__pycache__/
+*.pyc
+.pyabsa/
+*.pt
+*.bin
+
+# Output data files
+output/results/
+output/master_triplets.csv
+output/summary_stats.csv
+
+# Mac system files
+.DS_Store
+
+# Python env
+.env
+*.egg-info/

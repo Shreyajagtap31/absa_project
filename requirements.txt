@@ -1,0 +1,4 @@
+pyabsa==2.4.3
+pandas
+streamlit
+plotly
