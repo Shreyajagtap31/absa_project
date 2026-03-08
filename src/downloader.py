@@ -1,12 +1,11 @@
-# downloader.py
-# Downloads Amazon Electronics reviews using huggingface_hub
-# which handles auth, redirects and caching automatically
-
 from huggingface_hub import hf_hub_download
 import json
 import pandas as pd
+import os
 
-print("Downloading Electronics reviews via huggingface_hub...")
+os.makedirs("data/raw", exist_ok=True)
+
+print("Downloading Electronics reviews...")
 
 filepath = hf_hub_download(
     repo_id="McAuley-Lab/Amazon-Reviews-2023",
@@ -14,13 +13,13 @@ filepath = hf_hub_download(
     repo_type="dataset"
 )
 
-print(f"File downloaded to: {filepath}")
-print("Parsing reviews...")
+print(f"File cached at: {filepath}")
+print("Parsing 500,000 reviews...")
 
 reviews = []
 with open(filepath, "r", encoding="utf-8") as f:
     for i, line in enumerate(f):
-        if i >= 50000:
+        if i >= 500000:
             break
         r = json.loads(line)
         reviews.append({
@@ -29,14 +28,14 @@ with open(filepath, "r", encoding="utf-8") as f:
             "rating": r.get("rating", 0),
             "date":   r.get("timestamp", "")
         })
-        if i % 5000 == 0:
-            print(f"  Parsed {i}...")
+        if i % 50000 == 0:
+            print(f"  Parsed {i:,}...")
 
 df = pd.DataFrame(reviews)
 df = df[df["text"].str.len() > 50]
 df.to_csv("data/raw/electronics_reviews.csv", index=False)
 
-print(f"\nDone! {len(df)} reviews saved.")
-print(f"Unique ASINs: {df['asin'].nunique()}")
-print("\nTop 10 ASINs:")
-print(df["asin"].value_counts().head(10))
+print(f"\nDone! {len(df):,} reviews saved.")
+print(f"Unique ASINs: {df['asin'].nunique():,}")
+print("\nTop 20 ASINs by review count:")
+print(df["asin"].value_counts().head(20))
